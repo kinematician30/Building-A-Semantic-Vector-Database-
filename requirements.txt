@@ -1,0 +1,4 @@
+pandas
+pyarrow
+PyYAML
+sentence-transformers

@@ -71,23 +71,23 @@ def recursive_chunker(text):
 # Finally register the recursive chunker fucntion as a udf in pyspark
 chunk_udf = udf(recursive_chunker, ArrayType(StringType()))
 
-# #  GOLD TABLE 1: dim_products 
-# print("Extracting Product Metadata...")
-# dim_products = silver_df.select(
-#     col("parent_asin").alias("product_id"), 
-#     col("title").alias("product_name"), "main_category", "price"
-# ).distinct()
-# print(f"Added {dim_products.count()} unique products to dim_products table.")
-# dim_products.coalesce(1).write.mode("overwrite").parquet("./data/gold/dim_products")
+#  GOLD TABLE 1: dim_products 
+print("Extracting Product Metadata...")
+dim_products = silver_df.select(
+    col("parent_asin").alias("product_id"), 
+    col("title").alias("product_name"), "main_category", "price"
+).distinct()
+print(f"Added {dim_products.count()} unique products to dim_products table.")
+dim_products.coalesce(1).write.mode("overwrite").parquet("./data/gold/dim_products")
 
-# #  GOLD TABLE 2: dim_users 
-# print("Extracting User Personalization Data...")
-# dim_users = silver_df.groupBy("user_id").agg(
-#     count("*").alias("review_count"),
-#     avg("rating").alias("avg_rating_given")
-# )
-# print(f"Added {dim_users.count()} unique users to dim_users table.")
-# dim_users.coalesce(1).write.mode("overwrite").parquet("data/gold/dim_users")
+#  GOLD TABLE 2: dim_users 
+print("Extracting User Personalization Data...")
+dim_users = silver_df.groupBy("user_id").agg(
+    count("*").alias("review_count"),
+    avg("rating").alias("avg_rating_given")
+)
+print(f"Added {dim_users.count()} unique users to dim_users table.")
+dim_users.coalesce(1).write.mode("overwrite").parquet("data/gold/dim_users")
 
 #  GOLD TABLE 3: fact_review_vectors 
 print("Applying Recursive Splitter for Vector Embeddings...")

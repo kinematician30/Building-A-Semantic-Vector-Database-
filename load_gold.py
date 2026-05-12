@@ -2,6 +2,11 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import udf, col
 from pyspark.sql.types import ArrayType, FloatType
 from sentence_transformers import SentenceTransformer
+import os
+import sys
+
+os.environ['PYSPARK_PYTHON'] = sys.executable
+os.environ['PYSPARK_DRIVER_PYTHON'] = sys.executable
 
 # Spark Cinfig
 spark = SparkSession.builder.appName("VectorEngine").config("spark.sql.shuffle.partitions", "20").config("spark.sql.caseSensitive", "true").config("spark.driver.memory", "4g").config("spark.executor.memory", "4g").master('local[*]').getOrCreate()
